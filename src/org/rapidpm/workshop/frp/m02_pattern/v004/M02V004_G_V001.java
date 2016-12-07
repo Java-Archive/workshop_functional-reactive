@@ -1,8 +1,6 @@
 package org.rapidpm.workshop.frp.m02_pattern.v004;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntBinaryOperator;
 
@@ -25,7 +23,6 @@ import static java.util.Optional.of;
  * Created by RapidPM - Team on 07.12.16.
  */
 public class M02V004_G_V001 {
-
   private static final Function<String, Optional<IntBinaryOperator>> str2OpFNC = (str) ->
       (isNull(str))     ? empty() :
       (str.equals("+")) ? of((a, b) -> a + b) :

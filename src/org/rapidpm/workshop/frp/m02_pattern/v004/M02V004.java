@@ -1,8 +1,6 @@
 package org.rapidpm.workshop.frp.m02_pattern.v004;
 
-import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.IntBinaryOperator;
+import java.util.Stack;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -20,91 +18,97 @@ import java.util.function.IntBinaryOperator;
  */
 public class M02V004 {
 
-
-  private static final BiFunction<Stack<Integer>, IntBinaryOperator, Integer> EXECUTE = (stack, operator) -> {
-    int right = stack.pop();
-    int left = stack.pop();
-    return operator.applyAsInt(left, right);
-  };
-
-
-  private static final Map<String, Optional<IntBinaryOperator>> OPERATOR_MAP = new HashMap<>();
-
-  static {
-    OPERATOR_MAP.put("+", Optional.of((a, b) -> a + b));
-    OPERATOR_MAP.put("*", Optional.of((a, b) -> a * b));
-    OPERATOR_MAP.put("-", Optional.of((a, b) -> a - b));
+  interface Expression {
+    int interpret();
   }
 
-  public static int evaluate(List<String> elements) {
-    final Stack<Integer> stack = new Stack<>();
+  public static abstract class Operator implements Expression {
+    protected final Expression leftExpression;
+    protected final Expression rightExpression;
 
-    //final String[] split = elements.split(" ");
-    //StreamSupport.stream(Spliterators.spliterator(split, Spliterator.ORDERED), false)
+    public Operator(final Expression leftExpression, final Expression rightExpression) {
+      this.leftExpression = leftExpression;
+      this.rightExpression = rightExpression;
+    }
+  }
 
-    elements
-        .forEach(element -> {
-          final Optional<IntBinaryOperator> op = OPERATOR_MAP.getOrDefault(element, Optional.empty());
-          op.ifPresentOrElse(
-              operator -> {
-                final Integer item = EXECUTE.apply(stack, operator);
-                stack.push(item);
-              },
-              () -> stack.push(Integer.parseInt(element)));
-        });
+  public static class Add extends Operator {
+    public Add(final Expression leftExpression, final Expression rightExpression) {
+      super(leftExpression, rightExpression);
+    }
 
+    @Override
+    public int interpret() {
+      return leftExpression.interpret() + rightExpression.interpret();
+    }
+  }
 
-//    elements
-//        .forEach(element -> {
-//          final Optional<IntBinaryOperator> op = OPERATOR_MAP.getOrDefault(element, Optional.empty());
-//          op.ifPresentOrElse(
-//              operator -> {
-//                final Integer item = EXECUTE.apply(stack, operator);
-//                stack.push(item);
-//              },
-//              () -> stack.push(Integer.parseInt(element)));
-//        });
+  public static class Subtract extends Operator {
 
-//    elements
-//        .forEach(s -> {
-//          final Optional<IntBinaryOperator> op = OPERATOR_MAP.getOrDefault(s, Optional.empty());
-//          op.ifPresentOrElse(
-//              intBinaryOperator -> {
-//                int right = stack.pop();
-//                int left = stack.pop();
-//                final int item = intBinaryOperator.applyAsInt(left, right);
-//                stack.push(item);
-//              },
-//              () -> stack.push(Integer.parseInt(s)));
-//        });
+    public Subtract(final Expression leftExpression, final Expression rightExpression) {
+      super(leftExpression, rightExpression);
+    }
 
+    @Override
+    public int interpret() {
+      return leftExpression.interpret() - rightExpression.interpret();
+    }
+  }
 
-//    for (final String s : expression.split(" ")) {
-//      System.out.print("s = " + s + " -> ");
-//      final Optional<IntBinaryOperator> op = OPERATOR_MAP.getOrDefault(s, Optional.empty());
-//      System.out.println("op = " + op);
-//      op.ifPresentOrElse(
-//          intBinaryOperator -> {
-//            int right = stack.pop();
-//            int left = stack.pop();
-//            System.out.println("left = " + left);
-//            System.out.println("right = " + right);
-//            final int item = intBinaryOperator.applyAsInt(left, right);
-//            System.out.println("result = " + item);
-//            stack.push(item);
-//          },
-//          () -> stack.push(Integer.parseInt(s)));
-//    }
-    return stack.pop();
+  public static class Product extends Operator {
+
+    public Product(final Expression leftExpression, final Expression rightExpression) {
+      super(leftExpression, rightExpression);
+    }
+
+    @Override
+    public int interpret() {
+      return leftExpression.interpret() * rightExpression.interpret();
+    }
+  }
+
+  public static class Number implements Expression {
+    private final int n;
+
+    public Number(int n) {
+      this.n = n;
+    }
+
+    @Override
+    public int interpret() {
+      return n;
+    }
+  }
+
+  public static boolean isOperator(String s) {
+    return s.equals("+") || s.equals("-") || s.equals("*");
+  }
+
+  public static Expression getOperator(String s, Expression left, Expression right) {
+    return
+        (s.equals("+")) ? new Add(left, right) :
+        (s.equals("-")) ? new Subtract(left, right) :
+        (s.equals("*")) ? new Product(left, right) :
+                          null; // not nice ;-)
+  }
+
+  public static int evaluate(String expression) {
+    final Stack<Expression> stack = new Stack<>();
+    for (final String s : expression.split(" ")) {
+      if (isOperator(s)) {
+        Expression right = stack.pop();
+        Expression left = stack.pop();
+        stack.push(getOperator(s, left, right));
+      } else {
+        Expression i = new Number(Integer.parseInt(s));
+        stack.push(i);
+      }
+    }
+    return stack.pop().interpret();
   }
 
   public static void main(String[] args) {
-    //String expression = "7 3 - 2 1 + *";
-    //List<String> elements = Arrays.asList(expression.split(" "));
-
-    final List<String> elements = Arrays.asList("7", "3", "-", "2", "1", "+", "*");
-
-
-    System.out.println(evaluate(elements));
+    String expression = "7 3 - 2 1 + *";
+    System.out.println(evaluate(expression));
   }
 }
