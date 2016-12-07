@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.frp.m01_pattern.v003;
+package org.rapidpm.workshop.frp.m02_pattern.v003;
 
 import java.util.Objects;
 
@@ -16,60 +16,66 @@ import java.util.Objects;
  *
  * Created by RapidPM - Team on 04.12.16.
  */
-public class M01V003_C {
+public class M02V003_B {
 
   @FunctionalInterface
   public interface CalculatorService {
-
     double calculate(double value);
+  }
 
-    default CalculatorService andThen(CalculatorService after) {
-      Objects.requireNonNull(after);
-      return (double value) -> after.calculate(calculate(value));
+  @FunctionalInterface
+  public interface CalculatorDecoratorService extends CalculatorService {
+
+    default CalculatorDecoratorService calculateBefore(CalculatorService before) {
+      Objects.requireNonNull(before);
+      return (double value) -> calculate(before.calculate(value));
     }
   }
 
+
+
   public static final CalculatorService CalculatorDefaultService = (value) -> {
-      final double result = value + 100;
-      System.out.println("CalculatorDefaultService - in / out = " + value + " - " + result);
-      return result;
+    final double result = value + 100;
+    System.out.println("CalculatorDefaultService - in / out = " + value + " - " + result);
+    return result;
   };
 
-  public static final CalculatorService RoundUpService = (value) -> {
+  public static final CalculatorDecoratorService RoundUpService = (value) -> {
     final double result = Math.ceil(value);
     System.out.println("RoundUpService - in / out = " + value + " - " + result);
     return result;
   };
 
-  public static final CalculatorService AddHalfService = (value) -> {
+  public static final CalculatorDecoratorService AddHalfService = (value) -> {
     final double result = value + 0.5d;
     System.out.println("AddHalfService - in / out = " + value + " - " + result);
     return result;
   };
-  public static final CalculatorService SubOneService = (value) -> {
+  public static final CalculatorDecoratorService SubOneService = (value) -> {
     final double result = value - 1;
     System.out.println("SubOneService - in / out = " + value + " - " + result);
     return result;
   };
 
+
+
   public static void main( String[] args ) {
 
-    final double calculate = CalculatorDefaultService
-        .andThen(SubOneService)
-        .andThen(AddHalfService)
-        .andThen(RoundUpService)
+    final double calculate = RoundUpService
+        .calculateBefore(AddHalfService)
+        .calculateBefore(SubOneService)
+        .calculateBefore(CalculatorDefaultService)
         .calculate(10.3d);
+
     System.out.println("calculate = " + calculate);
 
-    final double calculateShort = CalculatorDefaultService
-        .andThen(value -> value - 1)
-        .andThen(value -> value + 0.5d)
-        .andThen(Math::ceil)
+    final double calculateShort = RoundUpService
+        .calculateBefore(value -> value + 0.5d)
+        .calculateBefore(value -> value - 1)
+        .calculateBefore(CalculatorDefaultService)
         .calculate(10.3d);
 
     System.out.println("calculateShort = " + calculateShort);
 
   }
-
-
 }

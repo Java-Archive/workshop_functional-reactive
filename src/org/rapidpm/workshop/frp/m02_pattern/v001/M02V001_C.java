@@ -1,6 +1,8 @@
-package org.rapidpm.workshop.frp.m01_pattern.v001;
+package org.rapidpm.workshop.frp.m02_pattern.v001;
 
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -16,7 +18,7 @@ import java.util.Optional;
  *
  * Created by RapidPM - Team on 04.12.16.
  */
-public class M01V001_B {
+public class M02V001_C {
 
   public interface Service {
     String doWork(String value);
@@ -26,86 +28,61 @@ public class M01V001_B {
     public DefaultService() {
       System.out.println(DefaultService.class.getSimpleName() + " created");
     }
-
     @Override
     public String doWork(String value) {
-      return Optional.ofNullable(value)
-          .orElse("")
-          .toUpperCase();
+      return Optional.ofNullable(value).orElse("").toUpperCase();
     }
   }
 
 
-  @FunctionalInterface
-  public interface Factory<T> {
-    T createInstance();
-  }
+  public static Supplier<Service> factoryDefaulService = DefaultService::new;
 
-
-  public static class ServiceFactory implements Factory<Service> {
-    @Override
-    public Service createInstance() {
-      return new DefaultService();
-    }
-  }
-
-  @FunctionalInterface
-  public interface Strategy<T> {
-    T realSubject(Factory<T> factory);
-
-  }
-
-  public static class StrategyNotThreadSafe<T> implements Strategy<T>{
+  public static class StrategyNotThreadSafe<T> implements Function<Supplier<T>,T> {
     private T delegator;
     @Override
-    public T realSubject(final Factory<T> factory) {
-      System.out.println("factory = " + factory.getClass().getSimpleName());
+    public T apply(final Supplier<T> supplier) {
+      System.out.println("factory = " + supplier.getClass().getSimpleName());
       if(delegator == null) {
         System.out.println("StrategyNotThreadSafe - create Delegator ");
-        delegator = factory.createInstance();
+        delegator = supplier.get();
       }
       return delegator;
     }
   }
 
-  public static class StrategyMethodScoped<T> implements Strategy<T>{
+
+  public static class StrategyMethodScoped<T> implements Function<Supplier<T>,T> {
     @Override
-    public T realSubject(final Factory<T> factory) {
+    public T apply(final Supplier<T> supplier) {
       System.out.println("StrategyMethodScoped - create Delegator ");
-      return factory.createInstance();
+      return supplier.get();
     }
   }
 
+  //or shorter
+  public static final Function<Supplier<Service>,Service> methodScoped = Supplier::get;
 
-  // combine
+  //  // combine
   public static class VirtualProxy implements Service {
 
-    private Factory<Service> factory;
-    private Strategy<Service> strategy;
+    private Supplier<Service> factory;
+    private Function<Supplier<Service>,Service> strategy;
 
-    public VirtualProxy(final Factory<Service> factory, final Strategy<Service> strategy) {
-      this.factory = factory;
-      this.strategy = strategy;
+    public VirtualProxy(final Supplier<Service> supplier ,
+                        final Function<Supplier<Service>,Service> function) {
+      this.factory = supplier;
+      this.strategy = function;
     }
 
     @Override
     public String doWork(final String value) {
-      return strategy.realSubject(factory).doWork(value);
+      return strategy.apply(factory).doWork(value);
     }
   }
 
   public static void main(String[] args) {
-
-    final Service virtualproxy = new VirtualProxy(
-        new ServiceFactory(),
-        new StrategyNotThreadSafe<>());
-
+    final Service virtualproxy = new VirtualProxy(factoryDefaulService,
+                                                  new StrategyNotThreadSafe<>());
     virtualproxy.doWork("Hello");
-
   }
-
-
-
-
-
 }

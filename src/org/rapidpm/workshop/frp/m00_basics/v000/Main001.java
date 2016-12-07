@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.frp.m00_basics.v000_a;
+package org.rapidpm.workshop.frp.m00_basics.v000;
 
 /**
  * Copyright (C) 2010 RapidPM

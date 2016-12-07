@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.frp.m01_pattern.v003;
+package org.rapidpm.workshop.frp.m02_pattern.v003;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -14,7 +14,7 @@ package org.rapidpm.workshop.frp.m01_pattern.v003;
  *
  * Created by RapidPM - Team on 04.12.16.
  */
-public class M01V003_A_Pre8 {
+public class M02V003_A_Pre8 {
 
   public interface CalculatorService {
     double calculate(double value);

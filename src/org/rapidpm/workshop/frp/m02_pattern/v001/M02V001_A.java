@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.frp.m01_pattern.v001;
+package org.rapidpm.workshop.frp.m02_pattern.v001;
 
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
  *
  * Created by RapidPM - Team on 04.12.16.
  */
-public class M01V001_A {
+public class M02V001_A {
 
   public interface Service {
     String doWork(String value);
