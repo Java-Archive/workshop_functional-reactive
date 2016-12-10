@@ -1,5 +1,6 @@
 package org.rapidpm.workshop.frp.m05_functional.v002_memoizing;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -14,22 +15,17 @@ import java.util.function.Function;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by RapidPM - Team on 09.12.16.
+ * Created by RapidPM - Team on 10.12.16.
  */
-public class M05V002 {
+public class M05V004 {
 
-  private static final Function<Integer, Integer> squareFunction = x -> {
-    System.out.println("In function");
-    return x * x;
-  };
+  public static BiFunction<Integer,Integer,Integer> mul = (x, y) -> x*y;
 
-  public static final Function<Integer, Integer> memoizationFunction = Memoizer.memoize(squareFunction);
+  public static final Function<Integer, Function<Integer,Integer>> memoizationFunction
+      = Memoizer.memoize(x -> Memoizer.memoize(y -> mul.apply(x,y)));
 
   public static void main(String[] args) {
-    System.out.println("memoizationFunction = " + memoizationFunction.apply(2));
-    System.out.println("memoizationFunction = " + memoizationFunction.apply(2));
-
+    System.out.println("memoizationFunction = " + memoizationFunction.apply(2).apply(3));
+    System.out.println("memoizationFunction = " + memoizationFunction.apply(2).apply(3));
   }
-
-
 }

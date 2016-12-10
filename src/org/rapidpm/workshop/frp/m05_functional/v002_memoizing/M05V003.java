@@ -14,22 +14,19 @@ import java.util.function.Function;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by RapidPM - Team on 09.12.16.
+ * Created by RapidPM - Team on 10.12.16.
  */
-public class M05V002 {
+public class M05V003 {
 
-  private static final Function<Integer, Integer> squareFunction = x -> {
-    System.out.println("In function");
-    return x * x;
-  };
+//  private static final BiFunction<Integer,Integer,Integer> biFunction = (x,y) -> x * y;
 
-  public static final Function<Integer, Integer> memoizationFunction = Memoizer.memoize(squareFunction);
+  private static final Function<Integer, Function<Integer, Integer>> biFunction = x -> y -> x * y;
+
+  public static final Function<Integer, Function<Integer,Integer>> memoizationFunction
+      = Memoizer.memoize(x -> Memoizer.memoize(y -> x * y));
 
   public static void main(String[] args) {
-    System.out.println("memoizationFunction = " + memoizationFunction.apply(2));
-    System.out.println("memoizationFunction = " + memoizationFunction.apply(2));
-
+    System.out.println("memoizationFunction = " + memoizationFunction.apply(2).apply(3));
+    System.out.println("memoizationFunction = " + memoizationFunction.apply(2).apply(3));
   }
-
-
 }

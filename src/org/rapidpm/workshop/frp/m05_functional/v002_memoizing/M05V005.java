@@ -1,6 +1,8 @@
 package org.rapidpm.workshop.frp.m05_functional.v002_memoizing;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -14,22 +16,21 @@ import java.util.function.Function;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by RapidPM - Team on 09.12.16.
+ * Created by RapidPM - Team on 10.12.16.
  */
-public class M05V002 {
+public class M05V005 {
 
-  private static final Function<Integer, Integer> squareFunction = x -> {
-    System.out.println("In function");
-    return x * x;
-  };
-
-  public static final Function<Integer, Integer> memoizationFunction = Memoizer.memoize(squareFunction);
-
-  public static void main(String[] args) {
-    System.out.println("memoizationFunction = " + memoizationFunction.apply(2));
-    System.out.println("memoizationFunction = " + memoizationFunction.apply(2));
-
+  public static Function<Integer, Function<Integer, Integer>> create(
+      BiFunction<Integer, Integer, Supplier<Integer>> biFuncSupplier) {
+    return Memoizer.memoize(x -> Memoizer.memoize(y -> biFuncSupplier.apply(x, y).get()));
   }
 
-
+  public static void main(String[] args) {
+    final Function<Integer, Function<Integer, Integer>> function = create((x, y) -> () -> {
+      System.out.println("execute x/y = " + x + " / " + y);
+      return x * y;
+    });
+    System.out.println("memoizationFunction = " + function.apply(2).apply(3));
+    System.out.println("memoizationFunction = " + function.apply(2).apply(3));
+  }
 }
