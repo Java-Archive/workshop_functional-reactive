@@ -36,7 +36,5 @@ public class M05V007 {
     });
     System.out.println("memoizationFunction = " + function.apply(2).apply(3));
     System.out.println("memoizationFunction = " + function.apply(2).apply(3));
-
-
   }
 }
