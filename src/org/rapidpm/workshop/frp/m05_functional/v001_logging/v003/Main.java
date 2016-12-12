@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.frp.m05_functional.functional.v003;
+package org.rapidpm.workshop.frp.m05_functional.v001_logging.v003;
 
 import java.util.Arrays;
 import java.util.List;

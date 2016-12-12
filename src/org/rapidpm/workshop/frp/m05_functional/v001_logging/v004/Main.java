@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.frp.m05_functional.functional.v004;
+package org.rapidpm.workshop.frp.m05_functional.v001_logging.v004;
 
 import java.util.function.Supplier;
 

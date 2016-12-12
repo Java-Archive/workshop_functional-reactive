@@ -1,9 +1,4 @@
-package org.rapidpm.workshop.frp.m05_functional.functional.v001;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static java.lang.System.out;
+package org.rapidpm.workshop.frp.m05_functional.v003_recursion;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -17,33 +12,12 @@ import static java.lang.System.out;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by RapidPM - Team on 18.10.16.
+ * Created by RapidPM - Team on 11.12.16.
  */
-public class Main {
+public class M05V003 {
 
   public static void main(String[] args) {
 
-    final List<String> names = Arrays.asList(
-        "Hugo",
-        "Willy",
-        "Simon",
-        "Erwin",
-        "Sigfried"
-    );
-
-    names
-        .stream()
-        .filter(s -> s.contains("i"))
-        .forEach(out::println);
-
-    out.println("names = " + names);
-
-    names
-        .stream()
-        .filter(s -> s.contains("g"))
-        .forEach(out::println);
-
-
-
   }
+
 }
