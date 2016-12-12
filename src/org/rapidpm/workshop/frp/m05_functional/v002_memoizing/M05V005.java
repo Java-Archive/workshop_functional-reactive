@@ -1,5 +1,7 @@
 package org.rapidpm.workshop.frp.m05_functional.v002_memoizing;
 
+import org.rapidpm.workshop.frp.core.model.Memoizer;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
