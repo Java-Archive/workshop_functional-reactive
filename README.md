@@ -75,3 +75,4 @@ Function<String, String> func = new Closure().func()
 
 ## FRP - combining both in Java
 
+## persistent and immutable data structures in Java

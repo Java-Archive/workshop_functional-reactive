@@ -16,30 +16,37 @@ package org.rapidpm.workshop.frp.m00_basics.v000;
  */
 public class Main001 {
 
-  public static class DemoClass {
-    static {
-      System.out.println(" static 001");
-    }
+  public static final MySubClass MY_SUB_CLASS_STATIC_001 = new MySubClass();
+  public final MySubClass mySubClass = new MySubClass();
 
-    static {
-      System.out.println(" static 002");
-    }
+  static {
+    System.out.println("static 01");
+  }
 
-    {
-      System.out.println(" non- static 001");
-    }
+  public static final MySubClass MY_SUB_CLASS_STATIC_002 = new MySubClass();
 
-    {
-      System.out.println(" non- static 002");
-    }
+  static {
+    System.out.println("static 02");
+  }
 
-    public DemoClass() {
-      System.out.println(" constructor ");
-    }
+  {
+    System.out.println("non- static 01");
+
+  }
+  {
+    System.out.println("non- static 02");
+
   }
 
   public static void main(String[] args) {
-    new DemoClass();
+
+    final MySubClass mySubClass = new MySubClass();
+    final Main001 myClass = new Main001();
   }
 
+  public static class MySubClass {
+    public MySubClass() {
+      System.out.println(" MySubClass ");
+    }
+  }
 }
