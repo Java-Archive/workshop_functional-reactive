@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  *
  * Created by RapidPM - Team on 04.12.16.
  */
-public class M02V001_C {
+public class M02V001_C<T> {
 
   public interface Service {
     String doWork(String value);
@@ -33,7 +33,6 @@ public class M02V001_C {
       return Optional.ofNullable(value).orElse("").toUpperCase();
     }
   }
-
 
   public static Supplier<Service> factoryDefaulService = DefaultService::new;
 
@@ -81,8 +80,10 @@ public class M02V001_C {
   }
 
   public static void main(String[] args) {
-    final Service virtualproxy = new VirtualProxy(factoryDefaulService,
+    final Service virtualproxy = new VirtualProxy(DefaultService::new,
                                                   new StrategyNotThreadSafe<>());
+//    final Service virtualproxy = new VirtualProxy(factoryDefaulService,
+//                                                  new StrategyNotThreadSafe<>());
     virtualproxy.doWork("Hello");
   }
 }

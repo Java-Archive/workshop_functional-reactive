@@ -31,7 +31,6 @@ public class M02V001_A {
     }
   }
 
-
   public static class VirtualNotThreadSafeProxyService implements Service {
 
     private Service delegator;
@@ -42,8 +41,4 @@ public class M02V001_A {
       return delegator.doWork(value);
     }
   }
-
-
-
-
 }

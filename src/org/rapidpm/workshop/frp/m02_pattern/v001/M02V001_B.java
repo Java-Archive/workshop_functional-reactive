@@ -35,12 +35,10 @@ public class M02V001_B {
     }
   }
 
-
   @FunctionalInterface
   public interface Factory<T> {
     T createInstance();
   }
-
 
   public static class ServiceFactory implements Factory<Service> {
     @Override
@@ -52,7 +50,6 @@ public class M02V001_B {
   @FunctionalInterface
   public interface Strategy<T> {
     T realSubject(Factory<T> factory);
-
   }
 
   public static class StrategyNotThreadSafe<T> implements Strategy<T>{
@@ -83,7 +80,8 @@ public class M02V001_B {
     private Factory<Service> factory;
     private Strategy<Service> strategy;
 
-    public VirtualProxy(final Factory<Service> factory, final Strategy<Service> strategy) {
+    public VirtualProxy(final Factory<Service> factory,
+                        final Strategy<Service> strategy) {
       this.factory = factory;
       this.strategy = strategy;
     }

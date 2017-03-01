@@ -43,15 +43,15 @@ public class M02V001_D {
   public static abstract class ProxyBuilder<T> {
 
     protected Supplier<T> serviceSupplier;
-    protected Function<Supplier<T>, T> serviceFunction;
+    protected Function<Supplier<T>, T> serviceStrategyFunction;
 
     public ProxyBuilder<T> withSupplier(final Supplier<T> serviceSupplier) {
       this.serviceSupplier = serviceSupplier;
       return this;
     }
 
-    public ProxyBuilder<T> withFunction(final Function<Supplier<T>, T> serviceFunction) {
-      this.serviceFunction = serviceFunction;
+    public ProxyBuilder<T> withStrategyFunction(final Function<Supplier<T>, T> serviceStrategyFunction) {
+      this.serviceStrategyFunction = serviceStrategyFunction;
       return this;
     }
 
@@ -59,16 +59,22 @@ public class M02V001_D {
 
   }
 
-  public static class ServiceProxyBuilder extends ProxyBuilder<Service> {
-    @Override
-    public Service build() {
+//  public static class ServiceProxyBuilder extends ProxyBuilder<Service> {
+//    @Override
+//    public Service build() {
 //      return new Service() {
 //        @Override
 //        public String doWork(final String value) {
-//          return serviceFunction.apply(serviceSupplier).doWork(value);
+//          return serviceStrategyFunction.apply(serviceSupplier).doWork(value);
 //        }
 //      };
-      return value -> serviceFunction.apply(serviceSupplier).doWork(value);
+//    }
+//  }
+
+  public static class ServiceProxyBuilder extends ProxyBuilder<Service> {
+    @Override
+    public Service build() {
+      return value -> serviceStrategyFunction.apply(serviceSupplier).doWork(value);
     }
   }
 
@@ -76,16 +82,42 @@ public class M02V001_D {
   public static void main(String[] args) {
 
     //method Scoped
+    System.out.println(" now method scoped = ");
+    methodScoped();
+    System.out.println(" now virtual proxy = ");
+    virtualProxy();
+
+
+  }
+
+  private static void virtualProxy() {
     final Service service = new ServiceProxyBuilder()
         .withSupplier(DefaultService::new)
-        .withFunction(Supplier::get)
+        .withStrategyFunction(new Function<>() {
+          private Service service = null;
+          @Override
+          public Service apply(final Supplier<Service> serviceSupplier) {
+            if (service == null) service = serviceSupplier.get();
+            return service;
+          }
+        })
         .build();
 
     service.doWork("Hello");
     service.doWork("Hello");
     service.doWork("Hello");
 
+  }
 
+  private static void methodScoped() {
+    final Service service = new ServiceProxyBuilder()
+        .withSupplier(DefaultService::new)
+        .withStrategyFunction(Supplier::get)
+        .build();
+
+    service.doWork("Hello");
+    service.doWork("Hello");
+    service.doWork("Hello");
   }
 
 

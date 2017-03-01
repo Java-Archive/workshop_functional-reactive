@@ -35,7 +35,7 @@ public class M02V004_G_V001 {
     for (final String s : expression.split(" ")) {
       str2OpFNC.apply(s)
           .ifPresentOrElse(op -> {
-                int right = stack.pop(); // not nice - state outside !
+                int right = stack.pop(); // not nice - state outside !?!
                 int left = stack.pop();
                 stack.push(op.applyAsInt(left, right));
               },
