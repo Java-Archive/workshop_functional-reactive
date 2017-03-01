@@ -6,6 +6,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static org.rapidpm.workshop.frp.core.model.Memoizer.memoize;
+
 /**
  * Copyright (C) 2010 RapidPM
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,27 +25,20 @@ import java.util.function.Supplier;
 public class M05V009 {
 
 
-  public static <T1, T2, R> BiFunction<T1, T2, R> memorize(final BiFunction<T1, T2, R> biFunc) {
-    return prepare(transform(biFunc));
+  public static <T1, T2, R> BiFunction<T1, T2, R> memoize(final BiFunction<T1, T2, R> biFunc) {
+    return backToBiFunction(create(biFunc));
   }
 
-  private static <T1, T2, R> BiFunction<T1, T2, R> prepare( final Function<T1, Function<T2, R>> transformed) {
-    return (x, y) -> transformed.apply(x).apply(y);
+  public static <T1, T2, R> BiFunction<T1, T2, R> backToBiFunction(final Function<T1, Function<T2, R>> function) {
+    return (x, y) -> function.apply(x).apply(y);
   }
 
-  private static <T1, T2, R> Function<T1, Function<T2, R>> transform(final BiFunction<T1, T2, R> biFunc) {
-    return create((x, y) -> () -> biFunc.apply(x, y));
-  }
-
-  private static <T1, T2, R> Function<T1, Function<T2, R>> create(final BiFunction<T1, T2, Supplier<R>> biFuncSupplier) {
-    return Memoizer.memoize(x -> Memoizer.memoize(y -> biFuncSupplier.apply(x, y).get()));
+  private static <T1, T2, R> Function<T1, Function<T2, R>> create(BiFunction<T1, T2, R> biFunction) {
+    return Memoizer.memoize(x -> Memoizer.memoize(y -> biFunction.apply(x, y)));
   }
 
   public static void main(String[] args) {
-    final BiFunction<Integer, Integer, Integer> function = memorize((x, y) -> {
-      System.out.println("execute x/y = " + x + " / " + y);
-      return x * y;
-    });
+    final BiFunction<Integer, Integer, Integer> function = memoize((x, y) -> x * y);
 
     System.out.println("memoizationFunction = " + function.apply(2,3));
     System.out.println("memoizationFunction = " + function.apply(2,3));

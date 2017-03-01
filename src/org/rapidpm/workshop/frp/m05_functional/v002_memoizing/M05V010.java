@@ -23,8 +23,10 @@ import java.util.function.Supplier;
 public class M05V010 {
 
   public static <T1, T2, R> BiFunction<T1, T2, R> memoize(final BiFunction<T1, T2, R> biFunc) {
-    final BiFunction<T1, T2, Supplier<R>> biFuncSupplier = (x, y) -> () -> biFunc.apply(x, y);
-    final Function<T1, Function<T2, R>> transformed = Memoizer.memoize(x -> Memoizer.memoize(y -> biFuncSupplier.apply(x, y).get()));
+    final Function<T1, Function<T2, R>> transformed
+        = Memoizer.memoize(
+            x -> Memoizer.memoize(
+                y -> biFunc.apply(x, y)));
     return (x, y) -> transformed.apply(x).apply(y);
   }
 

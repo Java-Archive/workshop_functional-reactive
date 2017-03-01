@@ -20,10 +20,7 @@ import java.util.function.Function;
  */
 public class M05V002 {
 
-  private static final Function<Integer, Integer> squareFunction = x -> {
-    System.out.println("In function");
-    return x * x;
-  };
+  private static final Function<Integer, Integer> squareFunction = x -> x * x;
 
   public static final Function<Integer, Integer> memoizationFunction = Memoizer.memoize(squareFunction);
 

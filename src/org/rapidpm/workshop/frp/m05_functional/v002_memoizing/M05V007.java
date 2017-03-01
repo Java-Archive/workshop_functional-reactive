@@ -1,10 +1,9 @@
 package org.rapidpm.workshop.frp.m05_functional.v002_memoizing;
 
-import org.rapidpm.workshop.frp.core.model.Memoizer;
-
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
+
+import static org.rapidpm.workshop.frp.core.model.Memoizer.memoize;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -21,21 +20,13 @@ import java.util.function.Supplier;
  * Created by RapidPM - Team on 10.12.16.
  */
 public class M05V007 {
-  public static <T1, T2, R> Function<T1, Function<T2, R>> transform(
-      final BiFunction<T1, T2, R> biFunc) {
-    return create((x, y) -> () -> biFunc.apply(x, y));
-  }
 
-  private static <T1, T2, R> Function<T1, Function<T2, R>> create(
-      BiFunction<T1, T2, Supplier<R>> biFuncSupplier) {
-    return Memoizer.memoize(x -> Memoizer.memoize(y -> biFuncSupplier.apply(x, y).get()));
+  private static <T1, T2, R> Function<T1, Function<T2, R>> create(BiFunction<T1, T2, R> biFunction) {
+    return memoize(x -> memoize(y -> biFunction.apply(x, y)));
   }
 
   public static void main(String[] args) {
-    final Function<Integer, Function<Integer, Integer>> function = transform((x, y) -> {
-      System.out.println("execute x/y = " + x + " / " + y);
-      return x * y;
-    });
+    final Function<Integer, Function<Integer, Integer>> function = create((x, y) -> x * y);
     System.out.println("memoizationFunction = " + function.apply(2).apply(3));
     System.out.println("memoizationFunction = " + function.apply(2).apply(3));
   }

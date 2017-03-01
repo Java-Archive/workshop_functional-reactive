@@ -2,6 +2,7 @@ package org.rapidpm.workshop.frp.m05_functional.v002_memoizing;
 
 import org.rapidpm.workshop.frp.core.model.Memoizer;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -20,9 +21,8 @@ import java.util.function.Function;
  */
 public class M05V003 {
 
-//  private static final BiFunction<Integer,Integer,Integer> biFunction = (x,y) -> x * y;
-
-  private static final Function<Integer, Function<Integer, Integer>> biFunction = x -> y -> x * y;
+  private static final BiFunction<Integer,Integer,Integer> biFunction = (x, y) -> x * y;
+  private static final Function<Integer, Function<Integer, Integer>> function = x -> y -> x * y;
 
   public static final Function<Integer, Function<Integer,Integer>> memoizationFunction
       = Memoizer.memoize(x -> Memoizer.memoize(y -> x * y));

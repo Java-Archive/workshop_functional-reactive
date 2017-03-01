@@ -33,20 +33,16 @@ public class M05V011 {
   }
 
   public static <T1, T2,T3, R> TriFunction<T1, T2,T3, R> memoize(final TriFunction<T1, T2,T3, R> threeFunc) {
-    final TriFunction<T1, T2,T3, Supplier<R>> threeFuncSupplier = (x, y, z) -> () -> threeFunc.apply(x, y,z);
     final Function<T1, Function<T2, Function<T3, R>>> transformed
         = Memoizer.memoize(
             x -> Memoizer.memoize(
                 y -> Memoizer.memoize(
-                    z -> threeFuncSupplier.apply(x, y,z).get())));
+                    z -> threeFunc.apply(x, y,z))));
     return (x, y, z) -> transformed.apply(x).apply(y).apply(z);
   }
 
   public static void main(String[] args) {
-    final TriFunction<Integer, Integer, Integer, Integer> function = memoize((x, y, z) -> {
-      System.out.println("execute x/y/z = " + x + " / " + y + " / " + z);
-      return x * y * z;
-    });
+    final TriFunction<Integer, Integer, Integer, Integer> function = memoize((x, y, z) -> x * y * z);
 
     System.out.println("memoizationFunction = " + function.apply(2,3,-1));
     System.out.println("memoizationFunction = " + function.apply(2,3,-1));

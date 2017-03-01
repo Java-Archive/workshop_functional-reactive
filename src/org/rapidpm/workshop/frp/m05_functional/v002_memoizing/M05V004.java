@@ -5,6 +5,8 @@ import org.rapidpm.workshop.frp.core.model.Memoizer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static org.rapidpm.workshop.frp.core.model.Memoizer.memoize;
+
 /**
  * Copyright (C) 2010 RapidPM
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +23,10 @@ import java.util.function.Function;
  */
 public class M05V004 {
 
-  public static BiFunction<Integer,Integer,Integer> mul = (x, y) -> x*y;
+  public static BiFunction<Integer, Integer, Integer> mul = (x, y) -> x * y;
 
-  public static final Function<Integer, Function<Integer,Integer>> memoizationFunction
-      = Memoizer.memoize(x -> Memoizer.memoize(y -> mul.apply(x,y)));
+  public static final Function<Integer, Function<Integer, Integer>> memoizationFunction
+      = memoize(x -> memoize(y -> mul.apply(x, y)));
 
   public static void main(String[] args) {
     System.out.println("memoizationFunction = " + memoizationFunction.apply(2).apply(3));
