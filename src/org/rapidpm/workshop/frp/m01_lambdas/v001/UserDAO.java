@@ -32,7 +32,7 @@ public abstract class UserDAO {
       final Connection connection = dataSource.getConnection();
       final int count;
       try (final Statement statement = connection.createStatement()) {
-        final String sql = createUpdteSQL(user);
+        final String sql = createUpdateSQL(user);
         count = statement.executeUpdate(sql);
         statement.close();
       }
@@ -44,7 +44,7 @@ public abstract class UserDAO {
     return -1;
   }
 
-  private String createUpdteSQL(final User user) {
+  private String createUpdateSQL(final User user) {
     return ""; // vendor SQL , MySQL/Oracle...
   }
 

@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.frp.m05_functional.v003_recursion;
+package org.rapidpm.workshop.frp.m05_functional.v003_currying;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -12,12 +12,13 @@ package org.rapidpm.workshop.frp.m05_functional.v003_recursion;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by RapidPM - Team on 11.12.16.
+ * Created by RapidPM - Team on 06.01.17.
  */
-public class M05V003 {
+public class M05V001 {
+
+  
 
   public static void main(String[] args) {
 
   }
-
 }

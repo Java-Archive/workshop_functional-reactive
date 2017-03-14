@@ -36,12 +36,14 @@ public class Memoizer<T, U> {
     return new Memoizer<T, U>().doMemoize(function);
   }
 
+
+
+
   public static <T1, T2, R> BiFunction<T1, T2, R> memoize(final BiFunction<T1, T2, R> biFunc) {
     final BiFunction<T1, T2, Supplier<R>> biFuncSupplier = (x, y) -> () -> biFunc.apply(x, y);
     final Function<T1, Function<T2, R>> transformed = Memoizer.memoize(x -> Memoizer.memoize(y -> biFuncSupplier.apply(x, y).get()));
     return (x, y) -> transformed.apply(x).apply(y);
   }
-
 
   @FunctionalInterface
   public interface TriFunction<T1, T2,T3, R> {
@@ -54,7 +56,8 @@ public class Memoizer<T, U> {
   }
 
   public static <T1, T2,T3, R> TriFunction<T1, T2,T3, R> memoize(final TriFunction<T1, T2,T3, R> threeFunc) {
-    final TriFunction<T1, T2,T3, Supplier<R>> threeFuncSupplier = (x, y, z) -> () -> threeFunc.apply(x, y,z);
+    final TriFunction<T1, T2,T3, Supplier<R>> threeFuncSupplier
+        = (x, y, z) -> () -> threeFunc.apply(x, y,z);
     final Function<T1, Function<T2, Function<T3, R>>> transformed
         = Memoizer.memoize(
         x -> Memoizer.memoize(
