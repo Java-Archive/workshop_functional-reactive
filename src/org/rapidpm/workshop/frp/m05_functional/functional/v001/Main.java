@@ -25,7 +25,8 @@ public class Main {
 
     //first +10 than func
     //not working System.out.println(func.compose(i -> i + 10).apply(1));
-    System.out.println(func.compose((Function<Integer, Integer>) integer -> integer + 10).apply(1));
+    final Function<Integer, Integer> functionPlusTen = integer -> integer + 10;
+    System.out.println(func.compose(functionPlusTen).apply(1));
 
     // first func than -10
     System.out.println(func.andThen(i -> i - 10).apply(1));
