@@ -12,9 +12,24 @@ package org.rapidpm.workshop.frp.m05_functional.functional.v006;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by Sven Ruppert - RapidPM - Team on 15.03.17.
+ * Created by Sven Ruppert - RapidPM - Team on 16.03.17.
  */
-public class Main {
+public class Main_PreJava8 {
 
+
+  public static void main(String[] args) {
+
+    validate("HelloWorld");
+
+
+  }
+
+  public static void validate(String input) {
+
+    if (input == null) System.out.println("input should not null");
+    else if(input.isEmpty()) System.out.println("input should not empty");
+    else System.out.println(input); // consume the value
+
+  }
 
 }
